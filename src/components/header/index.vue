@@ -1,0 +1,306 @@
+<template>
+  <div class="header-wrap">
+    <div class="header-right">
+      <div class="h-search">
+        <form onsubmit="return Hsearch();">
+          <div class="search-input-box">
+            <input type="text" class="search-input" placeholder="请输入姓名、公司、手机号等相关信息"/>
+          </div>
+          <div class="search-btn-box">
+            <input type="submit" value="&#xe616" class="search-btn"/>
+          </div>
+        </form>
+      </div>
+      <div class="h-nav-box">
+        <div class="nav-li">
+          <a class="nav-href" href="#">
+            <i class="nav-icon nav-service" data-toggle="tooltip" data-placement="auto left" title="在线客服"></i>
+          </a>
+        </div>
+        <div class="nav-li">
+          <a class="nav-href info-number" href="javascript:void(0);">
+            <i class="nav-icon nav-news" data-toggle="tooltip" data-placement="auto left" title="消息"></i>
+            <span class="badge bg-danger">555</span>
+          </a>
+        </div>
+        <div class="nav-li dropdown">
+          <a class="nav-href" href="javascript:void(0);" data-toggle="dropdown">
+            <i class="nav-icon nav-help" data-toggle="tooltip" data-placement="auto left" title="帮助"></i>
+          </a>
+          <div class="dropdown-menu dropdown-box">
+            <a class="dropli" href="javascript:void(0);">
+              <i class="drop-icon drop-new"></i>
+              <label>新手引导</label>
+            </a>
+            <a class="dropli" href="javascript:void(0);">
+              <i class="drop-icon drop-help"></i>
+              <label>帮助中心</label>
+            </a>
+            <a class="dropli" href="javascript:void(0);">
+              <i class="drop-icon drop-video"></i>
+              <label>视频引导</label>
+            </a>
+            <a class="dropli" href="javascript:void(0);">
+              <i class="drop-icon drop-return"></i>
+              <label>意见反馈</label>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+  export default {}
+</script>
+
+<style lang="scss" rel="stylesheet/scss">
+  .header-right {
+    float: right;
+  }
+  .h-search{
+    display: inline-block;
+  }
+
+  body, html {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  /*顶部*/
+  $h-p-t: 10px;
+  .b-header {
+    position: absolute;
+    z-index: 8;
+    top: 0;
+    right: 0;
+    left: 0;
+    /*<!--padding: $h-p-t $main-left;-->*/
+    /*<!--height: $header-h;-->*/
+    /*<!--min-width: 1190 - $aside-w;-->*/
+    background: #fff;
+    .side-open & {
+      /*<!--min-width: 1190 - $aside-s-w;-->*/
+    }
+//    @include clearfix;
+    &:after {
+      content: "";
+      display: inline-block;
+      position: absolute;
+      z-index: -1;
+      /*<!--left: $main-left;-->*/
+      /*<!--right: $main-right;-->*/
+      bottom: 0;
+      height: 1px;
+      background: #d4d4d4;
+    }
+
+  }
+
+  .h-left {
+    float: left;
+  }
+
+  .h-right {
+    float: right;
+  }
+
+  .h-main {
+    /*<!--line-height: $header-h - $h-p-t *2;-->*/
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .h-company{
+    font-weight: bold;
+  }
+
+  .h-search {
+    float: left;
+    padding-right: 20px;
+    border-right: 1px solid #d4d4d4;
+  }
+
+  .search-input-box {
+    display: inline-block;
+    width: 285px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 10px 20px;
+    /*<!--line-height: ($header-h - $h-p-t *2)-20;-->*/
+    border: none;
+    font-size: 14px;
+  }
+
+  .search-btn-box {
+    display: inline-block;
+  }
+
+  .search-btn {
+    /*<!--height: ($header-h - $h-p-t *2);-->*/
+    border: none;
+    background: none;
+    /*font-family: "iconfont";*/
+    font-size: 32px;
+    color: #d3d3d3;
+    line-height: 1;
+    &:hover {
+      color: #50d2c2;
+    }
+  }
+
+  .h-nav-box {
+    float: left;
+    padding: 0 5px;
+//    @include clearfix;
+  }
+
+  .nav-li {
+    position: relative;
+    float: left;
+    margin: 0 5px;
+
+    a.nav-href {
+      display: inline-block;
+      line-height: 0;
+      &:hover {
+        background: #f5f5f5;
+      }
+    }
+  }
+
+  .nav-icon {
+    width: 37px;
+    height: 37px;
+//    @include icon;
+    background-size: inherit;
+    text-align: center;
+    &:after {
+      /*font-family: iconfont;*/
+      font-size: 30px;
+      line-height: 1.2;
+      font-style: normal;
+      color: #999;
+    }
+  }
+
+  .nav-service:after {
+    content: "\e61f";
+  }
+
+  .nav-news:after {
+    content: "\e620";
+  }
+
+  .nav-help:after {
+    content: "\e622";
+  }
+
+  .dropdown-box {
+    position: absolute;
+    display: none;
+    z-index: 10;
+    top: 55px;
+    padding: 2px;
+    width: 135px;
+    background: #fff;
+    box-shadow: 0 0 2px rgba(0, 0, 0, .15);
+    .nav-li & {
+      right: -35px;
+      left: auto;
+    }
+    &.active {
+      display: block;
+    }
+  }
+
+  a.dropli {
+    position: relative;
+    display: block;
+    padding: 10px;
+    text-align: center;
+    line-height: 30px;
+    color: #383838;
+    text-decoration: none;
+    label {
+      display: block;
+      width: 70px;
+      margin: 0 auto;
+      cursor: pointer;
+    }
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+
+  .drop-icon {
+    position: absolute;
+    top: (50px - 26)/2;
+    left: 5px;
+    width: 25px;
+    height: 25px;
+//    @include icon;
+    &:after {
+      /*font-family: iconfont;*/
+      font-size: 25px;
+      line-height: 1;
+      font-style: normal;
+    }
+  }
+
+  .drop-new:after {
+    content: "\e623";
+  }
+
+  .drop-help:after {
+    content: "\e624";
+  }
+
+  .drop-video:after {
+    content: "\e627";
+  }
+
+  .drop-return:after {
+    content: "\e612";
+  }
+
+  .drop-down:after {
+    content: "\e60d";
+  }
+
+  .drop-out:after {
+    content: "\e62c";
+  }
+
+  .head {
+    position: relative;
+    float: left;
+    margin-left: 10px;
+    .dropdown-box {
+      right: 0;
+      left: auto;
+    }
+  }
+
+  .head-photo {
+    position: relative;
+    margin-right: 25px;
+    width: 40px;
+    height: 40px;
+//    @include icon;
+    background-size: cover;
+    cursor: pointer;
+    i {
+      position: absolute;
+      top: 50%;
+      right: -30px;
+      transform: translate3d(-50%, 0, 0);
+      display: inline-block;
+      /*<!--@include triangle(bottom, 6px, #999);-->*/
+    }
+  }
+
+</style>

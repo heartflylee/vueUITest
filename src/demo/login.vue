@@ -1,15 +1,15 @@
 <template>
   <div class="login-wrap">
-    <div class="signIn-wrap">
+    <div class="signIn-wrap" v-if="loginshow">
       <div class="s-logo"></div>
       <div class="s-main">
         <div class="login-box">
           <form @submit.prevent="login">
             <div class="input-box">
-              <input type="text" class="input l-phone" placeholder="请输入手机号" v-model="phone"/>
+              <input type="text" class="input l-phone" placeholder="请输入手机号" v-model="user.phone"/>
             </div>
             <div class="input-box">
-              <input type="password" class="input l-pwd" placeholder="请输入密码" v-model="psw"/>
+              <input type="password" class="input l-pwd" placeholder="请输入密码" v-model="user.psw"/>
             </div>
             <div class="input-box">
               <input type="submit" class="btn btn-primary l-submit" value="登 录"/>
@@ -39,93 +39,154 @@
         </div>
       </div>
     </div>
-    <sign-up v-if="signshow" title="欢迎注册云客企业版" @closeSign="closeSign">
-      <form id="f-signUp" @submit.prevent="submit">
-        <div class="s-input-box">
-          <input type="text" class="input" placeholder="请输入手机号" v-model="user.phone"/>
-        </div>
-        <div class="s-input-box">
-          <div class="box-captcha" id="popup-submit">
+
+    <!-- 注册弹框-->
+    <transition name="layerShow">
+      <layer-login v-if="signshow" title="欢迎注册云客企业版" name="signshow" @closelayer="closeSignLayer">
+        <sign-up @submit="next" @statement="statement"></sign-up>
+      </layer-login>
+    </transition>
+    <!-- 注册弹框-->
+
+    <!-- 输入公司名称-->
+    <transition name="layerShow">
+      <layer-login v-if="comshow" title="欢迎注册云客企业版" name="comshow" @closelayer="closeSignLayer">
+        <form @submit.prevent="company">
+          <div class="s-input-box">
+            <autocomplete id="company" classname="input" name="company" placeholder="请输入公司名称"
+                          url="./static/data/company.json" param="value" limit="5" anchor="value"
+                          @value="comValue"></autocomplete>
           </div>
-        </div>
-        <div class="s-input-box">
-          <input type="text" class="input yzm-input" placeholder="请输入验证码"/>
-          <a class="btn yzm-btn" href="javascript:void(0);">获取验证码</a>
-        </div>
-        <div class="s-input-box">
-          <input type="password" class="input" placeholder="请输入密码" v-model="user.psw"/>
-        </div>
-        <div class="s-input-box">
-          <input type="password" class="input" placeholder="请再次输入密码" v-model="user.rPsw"/>
-        </div>
-        <div class="s-input-box">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" checked="checked" name="agree" id="agree">
-              <i></i>同意《
-              <a class="href" href="javascript:void(0)" data-toggle="modal">云客法律声明及隐私权保护协议</a>
-              》</label>
+          <div class="s-input-box">
+            <input type="submit" class="btn btn-primary signUp-submit" value="完成注册"/>
           </div>
-        </div>
-        <div class="s-input-box">
-          <input type="submit" class="btn btn-primary signUp-submit" value="下一步"/>
-        </div>
-      </form>
-    </sign-up>
+        </form>
+      </layer-login>
+    </transition>
+    <!-- 输入公司名称-->
+
+    <!-- 法律声明保护协议 -->
+    <transition name="layerShow">
+      <layer v-if="statementshow" :layer="statePara" @closelayer="closeStatement">
+        <statement></statement>
+      </layer>
+    </transition>
+    <!-- 法律声明保护协议 -->
+
+    <!-- 企信信息-->
+    <transition name="layerShow">
+      <layer v-if="qixinshow">
+        <qixin>
+        </qixin>
+      </layer>
+    </transition>
+    <!-- 企信信息-->
   </div>
 </template>
 
 <script>
   import '../js/beAlert.js'
-  import SignUp from  '../components/signup/index.vue'
+  import layerLogin from  '../components/layerLogin/index.vue'
+  import layer from '../components/layer/index.vue'
+  import signUp from '../components/signUp/index.vue'
+  import autocomplete from '../components/autocomplete/index.vue'
+  import statement from '../components/statement/index.vue'
+  import qixin from '../components/qixin/index.vue'
+
   export default {
+    data(){
+      return {
+          loginshow:true,
+        signshow: false,
+        comshow: false,
+        statementshow: false,
+        qixinshow: false,
+        user: {
+          phone: "",
+          psw: ""
+        },
+        statePara: {
+          title: "云客法律声明及隐私权保护协议",
+          submitBtn: false
+        }
+      }
+    },
     components: {
-      SignUp
+      layerLogin,
+      layer,
+      signUp,
+      autocomplete,
+      statement,
+      qixin
     },
     methods: {
+      //显示注册弹框
       regist () {
         this.signshow = true
+          this.loginshow = false
+      },
+      closeSignLayer(layer){
+        console.log(this)
+        console.log(this.$data[layer]);
+        this.$data[layer] = !this.$data[layer]
+        this.loginshow = true
+      },
+      closeLayer(){
 
       },
-      closeSign(bool){
-        this.signshow = bool
+      //关闭注册弹框
+//      closeSign(bool){
+//        this.signshow = bool
+//      },
+//      //关闭输入公司名称弹框
+//      closeCom(bool){
+//        this.comshow = bool
+//      },
+      //保护协议显示
+      statement(bool){
+        console.log(bool)
+        this.statementshow = bool
+        this.signshow = false
       },
-      submit(event){
-        var formData = JSON.stringify(this.user); // 这里才是你的表单数据
-        console.log(formData);
-        console.log(event);
-        console.log('提交');
-        return false;
+      //关闭保护协议
+      closeStatement(bool){
+        this.statementshow = bool
+        this.signshow = true
       },
+
+      next(){
+        this.comshow = true
+        this.signshow = false
+      },
+
+      company(){
+        this.comshow = false
+        this.loginshow = true
+        console.log("注册完成")
+      },
+      //登陆跳转页面
       login(){
-        if (this.phone == "") {
+        if (this.user.phone == "") {
           alert("", "手机号不能为空", function () {
 
           });
           return false;
         }
-        if (this.psw == "") {
+        if (this.user.psw == "") {
           alert("", "密码不能为空", function () {
 
           });
           return false;
         }
-        console.log("");
-        window.location.href="/";
-      }
-    },
-    data(){
-      return {
-        signshow: false,
-        phone: "",
-        psw: "",
-        user: {
-          phone: "",
-          psw: "",
-          rPsw: ""
-        }
+        console.log(this.user);
+        console.log("登陆");
+        window.location.href = "/";
+      },
+      comValue(data){
+        console.log(data);
       }
     }
+
   }
 </script>
 
